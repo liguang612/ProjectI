@@ -80,7 +80,6 @@ void solve(vector<short> m, short c[10], int beg) {
 }
 
 int main() {
-    freopen("input.txt", "r", stdin);
     vector<short> sudoku;
     short countdown[10];
 

@@ -9,7 +9,10 @@ void gen(int n, string str) {
         return;
     }
     str += '0'; gen(n - 1, str); str.pop_back();
-    str += '1'; gen(n - 1, str);
+    if(str[str.length() - 1] != '1') {
+        str += '1';
+        gen(n - 1, str);
+    }
 }
 
 int main() {
