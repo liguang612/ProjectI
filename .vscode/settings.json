@@ -3,6 +3,7 @@
         "xstring": "cpp",
         "ostream": "cpp",
         "iostream": "cpp",
-        "queue": "cpp"
+        "queue": "cpp",
+        "xhash": "cpp"
     }
 }
