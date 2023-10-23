@@ -4,6 +4,18 @@
         "ostream": "cpp",
         "iostream": "cpp",
         "queue": "cpp",
-        "xhash": "cpp"
+        "xhash": "cpp",
+        "vector": "cpp",
+        "utility": "cpp",
+        "set": "cpp",
+        "xtree": "cpp",
+        "array": "cpp",
+        "deque": "cpp",
+        "list": "cpp",
+        "span": "cpp",
+        "xutility": "cpp",
+        "stack": "cpp",
+        "ranges": "cpp",
+        "xlocinfo": "cpp"
     }
 }
