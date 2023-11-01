@@ -16,6 +16,8 @@
         "xutility": "cpp",
         "stack": "cpp",
         "ranges": "cpp",
-        "xlocinfo": "cpp"
+        "xlocinfo": "cpp",
+        "map": "cpp",
+        "xiosbase": "cpp"
     }
 }
