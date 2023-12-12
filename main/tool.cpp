@@ -39,9 +39,3 @@ void gotoxy(short x, short y) {
     COORD c = {x, y};
     SetConsoleCursorPosition(h, c);
 }
-
-// Allow print Vietnamese word on the console
-void set_vietnamese_mode() {
-    system("color F0");
-    _setmode(_fileno(stdout), _O_U16TEXT);
-}
