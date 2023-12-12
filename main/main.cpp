@@ -1,6 +1,8 @@
 #include <iostream>
 #include <algorithm>
 #include <cmath>
+#include <iomanip>
+#include <map>
 #include <vector>
 
 #include "tool.cpp"
@@ -8,12 +10,13 @@
 using namespace std;
 
 struct U {
-    double p;
+    char c;
     int n;
+    double p;
     string codeword;
 
     U() {}
-    U(double p) : p(p) {
+    U(char c, double p) : c(c), p(p) {
         n = ceil(-log2(p));
     }
 
@@ -25,51 +28,66 @@ struct U {
     }
 };
 
+string source;
 unsigned int N;
 vector<double> f;
 vector<U> u;
 
-void convert() {
-    double temp;
-
-    for (int i = 0; i < N; i++)
+void gen_f() {
+    f.push_back(0);
+    u[0].codeword = converter(0.0, u[0].n);
+    for (int i = 1; i < N; i++)
     {
-        temp = f[i] - floor(f[i]); // Get the decimal part of number
-        u[i].codeword = converter(temp, u[i].n); // Step 4 and step 5
+        f[i] = f[i - 1] + u[i - 1].p; // Step 3 - calculate F(U_i)
+        u[i].codeword = converter(f[i], u[i].n); // Step 4 - convert to binary & Step 5 - get n_i digit after decimal point
     }
 }
 
-// Step 3
-void gen_f() {
-    f.push_back(0);
-    for (int i = 1; i < N; i++)
-    {
-        f[i] = f[i - 1] + u[i - 1].p;
+string encrypt() {
+    string encrypted = "";
+
+    for(char c : source) {
+        for(U e : u) {
+            if (e.c == c)
+            {
+                encrypted += e.codeword;
+                break;
+            }
+        }
     }
+
+    return encrypted;
 }
 
 void input() {
-    double temp;
+    int size;
+    map<char, int> frequent;
 
-    wcout << L"\tNhập số tin của nguồn: "; cin >> N;
+    wcout << L"\tNhập nguồn: "; getline(cin, source); // Step 1 - input
+    size = source.length();
 
-    wcout << L"Tin 1: "; cin >> temp;
-    u.push_back(U(temp));
-    for (int i = 1; i < N; i++)
-    {
-        wcout << L"Tin " << i + 1 << ": "; cin >> temp;
-        u.push_back(U(temp));  // Step 2 - integrated in constructor
+    for(char c : source) {
+        ++frequent[c]; // Step 1 - count frequent
     }
 
-    sort(u.begin(), u.end(), greater<U>()); // Step 1
+    N = frequent.size();
+    f.reserve(N);
+    u.reserve(N);
+
+    for (auto e : frequent) {
+        u.push_back(U(e.first, (double)e.second / size)); // Step 1 - calculate probability & Step 2 - calculate length of codeword
+    }
+
+    sort(u.begin(), u.end(), greater<U>()); // Step 1 - sort by descending
 }
 
 void show() {
-    wcout << "Show\n";
+    wcout << L"\n\tBộ mã\n";
+    wcout << setw(5) << "U" << setw(12) << "P" << setw(12) << "F" << setw(5) << "n" << setw(12) << L"Mã\n";
 
     for (int i = 0; i < N; i++)
     {
-        wcout << i << ": p = " << u[i].p << " f = " << f[i] <<  " n = " << u[i].n << " codeword = " << converter(u[i].codeword) << endl;
+        wcout << setw(5) << u[i].c << setw(12) << u[i].p << setw(12) << f[i] << setw(5) << u[i].n << setw(12) << converter(u[i].codeword) << endl;
     }
 }
 
@@ -81,11 +99,14 @@ int main() {
     
     wcout << L"______________________________________\n";
     wcout << L"\t\tChuơng trình mã hóa bản tin\n";
+    
     wcout << L"1. Nhập nguồn & Tìm bộ mã\n";
     input(); // Step 1 & step 2
-    gen_f(); // Step 3
-    convert(); // Step 4 & step 5
+    gen_f(); // Step 3 & step 4
+    show(); // Show codeword table
+
     wcout << L"\n2. Kết quả mã hóa bản tin\n";
+    wcout << converter(encrypt()) << endl;
     
     return 0;
 }
