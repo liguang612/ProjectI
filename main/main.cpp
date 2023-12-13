@@ -144,11 +144,11 @@ int main() {
     gen_key(); // Show codeword table and generate mapper to decrypt
 
     wcout << L"\n2. K\u1EBFt qu\u1EA3 m\u00E3 h\u00F3a b\u1EA3n tin\n";
-    wcout << "\n" << converter(encrypted = encrypt()) << endl; // Encrypt source based on codeword table
+    wcout << "\n   " << converter(encrypted = encrypt()) << endl; // Encrypt source based on codeword table
 
     // show();
     wcout << L"\n3. K\u1EBFt qu\u1EA3 gi\u1EA3i m\u00E3 t\u00EDn hi\u1EC7u\n";
-    wcout << L"\n" << decrypt(encrypted) << endl; // Decrypt the signal based on key map
+    wcout << L"\n   " << decrypt(encrypted) << endl; // Decrypt the signal based on key map
     
     return 0;
 }
