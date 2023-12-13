@@ -10,13 +10,13 @@
 using namespace std;
 
 struct U {
-    char c;
+    wchar_t c;
     int n;
     double p;
     string codeword;
 
     U() {}
-    U(char c, double p) : c(c), p(p) {
+    U(wchar_t c, double p) : c(c), p(p) {
         n = ceil(-log2(p));
     }
 
@@ -28,8 +28,8 @@ struct U {
     }
 };
 
-unordered_map<string, char> key;
-string source;
+unordered_map<string, wchar_t> key;
+wstring source;
 unsigned int N;
 vector<double> f;
 vector<U> u;
@@ -44,13 +44,14 @@ void gen_f() {
     }
 }
 
-string decrypt(string encrypted) {
-    string decrypted = "", word = "";
+wstring decrypt(string encrypted) {
+    wstring decrypted = L"";
+    string word = "";
 
     for(char c : encrypted) {
         if (c != '0' && c != '1') // Handle exception
         {
-            return "FAILED DECRYPTION CAUSED BY SIGNAL IS NOT BINARY TYPE AT";
+            return L"FAILED DECRYPTION CAUSED BY SIGNAL IS NOT BINARY TYPE";
         }
         word += c;
         if (key[word] != 0) // If found suitable character
@@ -62,7 +63,7 @@ string decrypt(string encrypted) {
 
     if (word != "")
     {
-        return "FAILED DECRYPTION CAUSED BY SIGNAL IS MISSING SOME DIGIT";
+        return L"FAILED DECRYPTION CAUSED BY SIGNAL IS MISSING SOME DIGIT";
     }
     return decrypted;
 }
@@ -70,7 +71,7 @@ string decrypt(string encrypted) {
 string encrypt() {
     string encrypted = "";
 
-    for(char c : source) {
+    for(wchar_t c : source) {
         for(U e : u) {
             if (e.c == c)
             {
@@ -85,12 +86,12 @@ string encrypt() {
 
 void input() {
     int size;
-    unordered_map<char, int> frequent;
+    unordered_map<wchar_t, int> frequent;
 
-    wcout << L"\tNh\u1EADp ngu\u1ED3n: "; getline(cin, source); // Step 1 - input
+    wcout << L"\tNh\u1EADp ngu\u1ED3n: "; getline(wcin, source); // Step 1 - input
     size = source.length();
 
-    for(char c : source) {
+    for(wchar_t c : source) {
         ++frequent[c]; // Step 1 - count frequent
     }
 
@@ -98,7 +99,7 @@ void input() {
     f.reserve(N);
     u.reserve(N);
 
-    for (auto e : frequent) {
+    for (pair<wchar_t, int> e : frequent) {
         u.push_back(U(e.first, (double)e.second / size)); // Step 1 - calculate probability & Step 2 - calculate length of codeword
     }
 
@@ -116,10 +117,21 @@ void gen_key() {
     }
 }
 
+void show() {
+    wstring ws = L"";
+
+    for (auto e : key) {
+        ws += key[e.first];
+    }
+
+    wcout << ws << endl;
+}
+
 int main() {
     string encrypted;
 
     system("color F0"); // Set the color (background - text) of the console
+    _setmode(_fileno(stdin), _O_U16TEXT); // Allow to type Vietnamese on the console
     _setmode(_fileno(stdout), _O_U16TEXT); // Allow to print Vietnamese on the console
     SetConsoleTitleW(L"Ch\u01B0\u01A1ng tr\u00ECnh m\u00E3 h\u00F3a b\u1EA3n tin b\u1EB1ng thu\u1EADt to\u00E1n Shanon"); // Set the title of the console
     
@@ -134,8 +146,9 @@ int main() {
     wcout << L"\n2. K\u1EBFt qu\u1EA3 m\u00E3 h\u00F3a b\u1EA3n tin\n";
     wcout << "\n" << converter(encrypted = encrypt()) << endl; // Encrypt source based on codeword table
 
+    // show();
     wcout << L"\n3. K\u1EBFt qu\u1EA3 gi\u1EA3i m\u00E3 t\u00EDn hi\u1EC7u\n";
-    wcout << "\n" << converter(decrypt(encrypted)) << endl; // Decrypt the signal based on key map
+    wcout << L"\n" << decrypt(encrypted) << endl; // Decrypt the signal based on key map
     
     return 0;
 }
