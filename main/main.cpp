@@ -1,11 +1,13 @@
 #include <iostream>
 #include <algorithm>
 #include <cmath>
+#include <fcntl.h>
+#include <io.h>
 #include <iomanip>
+#include <string>
 #include <unordered_map>
 #include <vector>
-
-#include "tool.cpp"
+#include <windows.h>
 
 using namespace std;
 
@@ -34,6 +36,32 @@ unsigned int N;
 vector<double> f;
 vector<U> u;
 
+// Convert to binary and get n bit
+string converter(double dec_part, int n, string str = "") {
+    if (n == 0)
+    {
+        return str; // If getting enough digit after decimal point, stop
+    }
+    dec_part *= 2;
+    if (dec_part >= 1) // Recursion
+    {
+        return converter(dec_part - 1, n - 1, str + "1");
+    } else {
+        return converter(dec_part, n - 1, str + "0");
+    }
+}
+
+wstring converter(string str) {
+    if (str.empty()) return wstring(); // Handle empty case
+
+    int size_needed = MultiByteToWideChar(CP_UTF8, 0, &str[0], (int)str.size(), NULL, 0);
+    wstring wstr(size_needed, 0);
+    
+    MultiByteToWideChar(CP_UTF8, 0, &str[0], (int)str.size(), &wstr[0], size_needed);
+
+    return wstr;
+}
+
 void gen_f() {
     f.push_back(0);
     u[0].codeword = converter(0.0, u[0].n);
@@ -56,7 +84,7 @@ wstring decrypt(string encrypted) {
         word += c;
         if (key[word] != 0) // If found suitable character
         {
-            decrypted += key[word];
+            decrypted += key[word]; // add it into result string
             word = "";
         }
     }
@@ -73,9 +101,9 @@ string encrypt() {
 
     for(wchar_t c : source) {
         for(U e : u) {
-            if (e.c == c)
+            if (e.c == c) // If found suitable character
             {
-                encrypted += e.codeword;
+                encrypted += e.codeword; // add its codeword into encrypted string
                 break;
             }
         }
@@ -117,16 +145,6 @@ void gen_key() {
     }
 }
 
-void show() {
-    wstring ws = L"";
-
-    for (auto e : key) {
-        ws += key[e.first];
-    }
-
-    wcout << ws << endl;
-}
-
 int main() {
     string encrypted;
 
@@ -148,7 +166,9 @@ int main() {
 
     // show();
     wcout << L"\n3. K\u1EBFt qu\u1EA3 gi\u1EA3i m\u00E3 t\u00EDn hi\u1EC7u\n";
-    wcout << L"\n   " << decrypt(encrypted) << endl; // Decrypt the signal based on key map
+    wcout << L"\n   " << decrypt(encrypted) << endl << endl; // Decrypt the signal based on key map
+
+    system("pause"); // Pause console until pressing any key to exit.
     
     return 0;
 }

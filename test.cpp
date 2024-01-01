@@ -1,12 +1,21 @@
 #include <iostream>
-#include <map>
+#include <algorithm>
+#include <cmath>
+#include <fcntl.h>
+#include <io.h>
+#include <iomanip>
+#include <unordered_map>
+#include <vector>
+#include <windows.h>
 
 using namespace std;
 
 int main() {
-    map<int, char> m;
+    string encrypted;
 
-    cout << (int)m[0];
+    system("color F0"); // Set the color (background - text) of the console
+    _setmode(_fileno(stdin), _O_U16TEXT); // Allow to type Vietnamese on the console
+    _setmode(_fileno(stdout), _O_U16TEXT); // Allow to print Vietnamese on the console
 
-    return 0;
+    
 }
