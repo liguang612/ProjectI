@@ -1,7 +1,10 @@
 #include <iostream>
 #include <algorithm>
 #include <cmath>
+#include <codecvt>
 #include <fcntl.h>
+#include <fstream>
+#include <locale>
 #include <io.h>
 #include <iomanip>
 #include <string>
@@ -65,7 +68,7 @@ wstring converter(string str) {
 void gen_f() {
     f.push_back(0);
     u[0].codeword = converter(0.0, u[0].n);
-    for (int i = 1; i < N; i++)
+    for (unsigned int i = 1; i < N; i++)
     {
         f[i] = f[i - 1] + u[i - 1].p; // Step 3 - calculate F(U_i)
         u[i].codeword = converter(f[i], u[i].n); // Step 4 - convert to binary & Step 5 - get n_i digit after decimal point
@@ -114,9 +117,31 @@ string encrypt() {
 
 void input() {
     int size;
+    locale loc(locale(), new codecvt_utf8<wchar_t>); // This help encoding and convert UTF-8 text
     unordered_map<wchar_t, int> frequent;
+    wstring mode;
+    wifstream fi;
 
-    wcout << L"\tNh\u1EADp ngu\u1ED3n: "; getline(wcin, source); // Step 1 - input
+    wcout << L"Nh\u1EADp t\u1EEB:\n";
+    wcout << L"\ta. B\u00E0n ph\u00EDm\n";
+    wcout << L"\tb. File\n";
+    wcout << L"\tL\u1EF1a ch\u1ECDn: "; wcin >> mode; // Input mode
+    wcin.seekg(ios::end); // Move text poiner in stdin file to end of file
+
+    if (mode == L"b")
+    {
+        fi.open("input.txt"); // Open file input.txt
+        fi.imbue(loc); // Set locale for ifstream
+
+        getline(fi, source, L'\n'); // Step 1 - Input by using file
+
+        fi.close(); // Close file after reading completely to avoid error
+    }
+    else {
+        wcout << L"\tNh\u1EADp ngu\u1ED3n: ";
+        getline(wcin, source); // Step 1 - Input by using keyboard
+    }
+    
     size = source.length();
 
     for(wchar_t c : source) {
@@ -138,7 +163,7 @@ void gen_key() {
     wcout << L"\n\tB\u1ED9 m\u00E3\n";
     wcout << setw(5) << "U" << setw(12) << "P" << setw(12) << "F" << setw(5) << "n" << setw(12) << L"M\u00E3\n";
 
-    for (int i = 0; i < N; i++)
+    for (unsigned int i = 0; i < N; i++)
     {
         wcout << setw(5) << u[i].c << setw(12) << u[i].p << setw(12) << f[i] << setw(5) << u[i].n << setw(12) << converter(u[i].codeword) << endl;
         key[u[i].codeword] = u[i].c;
