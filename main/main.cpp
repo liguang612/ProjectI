@@ -128,6 +128,9 @@ void input() {
     wcout << L"\tL\u1EF1a ch\u1ECDn: "; wcin >> mode; // Input mode
     wcin.seekg(ios::end); // Move text poiner in stdin file to end of file
 
+    while (mode != L"b" && mode != L"a") { // Handle exception
+        wcout << "\tL\u1EF1a ch\u1ECDn kh\u00F4ng h\u1EE3p l\u1EC7, nh\u1EADp l\u1EA1i: "; wcin >> mode;
+    }
     if (mode == L"b")
     {
         fi.open("input.txt"); // Open file input.txt
