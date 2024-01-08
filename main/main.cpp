@@ -136,7 +136,10 @@ void input() {
         fi.open("input.txt"); // Open file input.txt
         fi.imbue(loc); // Set locale for ifstream
 
-        getline(fi, source, L'\n'); // Step 1 - Input by using file
+        wstring line;
+        while (getline(fi, line)) { // Input each line in case there are multiple lines
+            source += line + L'\n'; // Combine each line into source
+        } // Step 1 - Input by using file
 
         fi.close(); // Close file after reading completely to avoid error
     }
@@ -194,7 +197,7 @@ int main() {
 
     // show();
     wcout << L"\n3. K\u1EBFt qu\u1EA3 gi\u1EA3i m\u00E3 t\u00EDn hi\u1EC7u\n";
-    wcout << L"\n   " << decrypt(encrypted) << endl << endl; // Decrypt the signal based on key map
+    wcout << L"\n" << decrypt(encrypted) << endl << endl; // Decrypt the signal based on key map
 
     system("pause"); // Pause console until pressing any key to exit.
     
