@@ -33,8 +33,9 @@ struct U {
     }
 };
 
+locale loc(locale(), new codecvt_utf8<wchar_t>); // This help encoding and convert UTF-8 text
 unordered_map<string, wchar_t> key;
-wstring source;
+wstring mode, source;
 unsigned int N;
 vector<double> f;
 vector<U> u;
@@ -54,6 +55,7 @@ string converter(double dec_part, int n, string str = "") {
     }
 }
 
+// Convert string to wstring
 wstring converter(string str) {
     if (str.empty()) return wstring(); // Handle empty case
 
@@ -65,6 +67,7 @@ wstring converter(string str) {
     return wstr;
 }
 
+// Calculate the F
 void gen_f() {
     f.push_back(0);
     u[0].codeword = u[0].p < 1 ? converter(f[0], u[0].n) : "0"; // If the probability equal 1, so this is the only character in source. Set codeword instantly
@@ -75,6 +78,7 @@ void gen_f() {
     }
 }
 
+// Decrypt the text according to the key table
 wstring decrypt(string encrypted) {
     wstring decrypted = L"";
     string word = "";
@@ -99,6 +103,7 @@ wstring decrypt(string encrypted) {
     return decrypted;
 }
 
+// Encrypt the text according to the key table
 string encrypt() {
     string encrypted = "";
 
@@ -115,11 +120,10 @@ string encrypt() {
     return encrypted;
 }
 
+// Input the source
 void input() {
     int size;
-    locale loc(locale(), new codecvt_utf8<wchar_t>); // This help encoding and convert UTF-8 text
     unordered_map<wchar_t, int> frequent;
-    wstring mode;
     wifstream fi;
 
     wcout << L"Nh\u1EADp t\u1EEB:\n";
@@ -166,14 +170,29 @@ void input() {
     sort(u.begin(), u.end(), greater<U>()); // Step 1 - sort by descending
 }
 
+// Generate the key table
 void gen_key() {
-    wcout << L"\n\tB\u1ED9 m\u00E3\n";
-    wcout << setw(5) << "U" << setw(12) << "P" << setw(12) << "F" << setw(5) << "n" << setw(12) << L"M\u00E3\n";
-
-    for (unsigned int i = 0; i < N; i++)
+    if (mode == L"a")
     {
-        wcout << setw(5) << u[i].c << setw(12) << u[i].p << setw(12) << f[i] << setw(5) << u[i].n << setw(12) << converter(u[i].codeword) << endl;
-        key[u[i].codeword] = u[i].c;
+        wcout << L"\n\tB\u1ED9 m\u00E3\n";
+        wcout << setw(5) << "U" << setw(12) << "P" << setw(12) << "F" << setw(5) << "n" << setw(12) << L"M\u00E3\n";
+        for (unsigned int i = 0; i < N; i++)
+        {
+            wcout << setw(5) << u[i].c << setw(12) << u[i].p << setw(12) << f[i] << setw(5) << u[i].n << setw(12) << converter(u[i].codeword) << endl;
+            key[u[i].codeword] = u[i].c;
+        }
+    } else {
+        wofstream fo;
+        
+        fo.open("key_table.txt", ios::trunc);
+        fo.imbue(loc);
+        for (unsigned int i = 0; i < N; i++)
+        {
+            fo << setw(5) << u[i].c << setw(12) << u[i].p << setw(12) << f[i] << setw(5) << u[i].n << setw(12) << converter(u[i].codeword) << endl;
+            key[u[i].codeword] = u[i].c;
+        }
+        wcout << L"K\u1EBFt qu\u1EA3 \u0111\u00E3 \u0111\u01B0\u1EE3c ghi v\u00E0o file key_table.txt\n";
+        fo.close();
     }
 }
 
@@ -193,12 +212,27 @@ int main() {
     gen_f(); // Step 3 & step 4
     gen_key(); // Show codeword table and generate mapper to decrypt
 
-    wcout << L"\n2. K\u1EBFt qu\u1EA3 m\u00E3 h\u00F3a b\u1EA3n tin\n";
-    wcout << "\n" << converter(encrypted = encrypt()) << endl; // Encrypt source based on codeword table
+    if (mode == L"a")
+    {
+        wcout << L"\n2. K\u1EBFt qu\u1EA3 m\u00E3 h\u00F3a b\u1EA3n tin\n";
+        wcout << "\n" << converter(encrypted = encrypt()) << endl; // Encrypt source based on codeword table
 
-    // show();
-    wcout << L"\n3. K\u1EBFt qu\u1EA3 gi\u1EA3i m\u00E3 t\u00EDn hi\u1EC7u\n";
-    wcout << L"\n" << decrypt(encrypted) << endl << endl; // Decrypt the signal based on key map
+        wcout << L"\n3. K\u1EBFt qu\u1EA3 gi\u1EA3i m\u00E3 t\u00EDn hi\u1EC7u\n";
+        wcout << L"\n" << decrypt(encrypted) << endl << endl; // Decrypt the signal based on key map
+    } else {
+        wofstream fo;
+        
+        fo.open("encrypted.txt", ios::trunc);
+        fo.imbue(loc);
+        fo << converter(encrypted = encrypt()); // Encrypt source based on codeword table
+        wcout << L"K\u1EBFt qu\u1EA3 \u0111\u00E3 \u0111\u01B0\u1EE3c ghi v\u00E0o file encrypted.txt\n";
+        fo.close();
+
+        fo.open("decrypted.txt", ios::trunc);
+        fo << decrypt(encrypted); // Decryped the signal based on key map
+        wcout << L"K\u1EBFt qu\u1EA3 \u0111\u00E3 \u0111\u01B0\u1EE3c ghi v\u00E0o file decrypted.txt\n";
+        fo.close();
+    }
 
     system("pause"); // Pause console until pressing any key to exit.
     
