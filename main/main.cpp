@@ -175,10 +175,11 @@ void gen_key() {
     if (mode == L"a")
     {
         wcout << L"\n\tB\u1ED9 m\u00E3\n";
-        wcout << setw(5) << "U" << setw(12) << "P" << setw(12) << "F" << setw(5) << "n" << setw(12) << L"M\u00E3\n";
+        wcout << setw(8) << "U" << setw(12) << "P" << setw(12) << "F" << setw(5) << "n" << setw(12) << L"M\u00E3\n";
         for (unsigned int i = 0; i < N; i++)
-        {
-            wcout << setw(5) << u[i].c << setw(12) << u[i].p << setw(12) << f[i] << setw(5) << u[i].n << setw(12) << converter(u[i].codeword) << endl;
+        { 
+            if(u[i].c == L' ') wcout << setw(8) << "<space>" << setw(12) << u[i].p << setw(12) << f[i] << setw(5) << u[i].n << setw(12) << converter(u[i].codeword) << endl;
+            else wcout << setw(8) << u[i].c << setw(12) << u[i].p << setw(12) << f[i] << setw(5) << u[i].n << setw(12) << converter(u[i].codeword) << endl;
             key[u[i].codeword] = u[i].c;
         }
     } else {
@@ -186,10 +187,12 @@ void gen_key() {
         
         fo.open("key_table.txt", ios::trunc);
         fo.imbue(loc); // Set locale for ofstream
-        fo << setw(5) << "U" << setw(12) << "P" << setw(12) << "F" << setw(5) << "n" << setw(12) << L"M\u00E3\n";
+        fo << setw(8) << "U" << setw(12) << "P" << setw(12) << "F" << setw(5) << "n" << setw(12) << L"M\u00E3\n";
         for (unsigned int i = 0; i < N; i++)
         {
-            fo << setw(5) << u[i].c << setw(12) << u[i].p << setw(12) << f[i] << setw(5) << u[i].n << setw(12) << converter(u[i].codeword) << endl;
+            if(u[i].c == L' ') fo << setw(8) << "<space>" << setw(12) << u[i].p << setw(12) << f[i] << setw(5) << u[i].n << setw(12) << converter(u[i].codeword) << endl;
+            else if(u[i].c == L'\n') fo << setw(8) << "<enter>" << setw(12) << u[i].p << setw(12) << f[i] << setw(5) << u[i].n << setw(12) << converter(u[i].codeword) << endl;
+            else fo << setw(8) << u[i].c << setw(12) << u[i].p << setw(12) << f[i] << setw(5) << u[i].n << setw(12) << converter(u[i].codeword) << endl;
             key[u[i].codeword] = u[i].c;
         }
         wcout << L"K\u1EBFt qu\u1EA3 \u0111\u00E3 \u0111\u01B0\u1EE3c ghi v\u00E0o file key_table.txt\n";
