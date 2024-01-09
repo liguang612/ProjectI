@@ -67,7 +67,7 @@ wstring converter(string str) {
 
 void gen_f() {
     f.push_back(0);
-    u[0].codeword = converter(0.0, u[0].n);
+    u[0].codeword = u[0].p < 1 ? converter(f[0], u[0].n) : "0"; // If the probability equal 1, so this is the only character in source. Set codeword instantly
     for (unsigned int i = 1; i < N; i++)
     {
         f[i] = f[i - 1] + u[i - 1].p; // Step 3 - calculate F(U_i)
@@ -129,7 +129,7 @@ void input() {
     wcin.seekg(ios::end); // Move text poiner in stdin file to end of file
 
     while (mode != L"b" && mode != L"a") { // Handle exception
-        wcout << "\tL\u1EF1a ch\u1ECDn kh\u00F4ng h\u1EE3p l\u1EC7, nh\u1EADp l\u1EA1i: "; wcin >> mode;
+        wcout << L"\tL\u1EF1a ch\u1ECDn kh\u00F4ng h\u1EE3p l\u1EC7, nh\u1EADp l\u1EA1i: "; wcin >> mode; wcin.seekg(ios::end);
     }
     if (mode == L"b")
     {
@@ -137,8 +137,9 @@ void input() {
         fi.imbue(loc); // Set locale for ifstream
 
         wstring line;
-        while (getline(fi, line)) { // Input each line in case there are multiple lines
-            source += line + L'\n'; // Combine each line into source
+        getline(fi, source); // Read first line
+        while (getline(fi, line)) { // Input each line in case there are other lines
+            source += L'\n' + line; // Combine each line into source
         } // Step 1 - Input by using file
 
         fi.close(); // Close file after reading completely to avoid error
