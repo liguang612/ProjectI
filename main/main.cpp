@@ -185,7 +185,7 @@ void gen_key() {
         wofstream fo;
         
         fo.open("key_table.txt", ios::trunc);
-        fo.imbue(loc);
+        fo.imbue(loc); // Set locale for ofstream
         for (unsigned int i = 0; i < N; i++)
         {
             fo << setw(5) << u[i].c << setw(12) << u[i].p << setw(12) << f[i] << setw(5) << u[i].n << setw(12) << converter(u[i].codeword) << endl;
@@ -223,7 +223,7 @@ int main() {
         wofstream fo;
         
         fo.open("encrypted.txt", ios::trunc);
-        fo.imbue(loc);
+        fo.imbue(loc); // Set locale for ofstream
         fo << converter(encrypted = encrypt()); // Encrypt source based on codeword table
         wcout << L"K\u1EBFt qu\u1EA3 \u0111\u00E3 \u0111\u01B0\u1EE3c ghi v\u00E0o file encrypted.txt\n";
         fo.close();
