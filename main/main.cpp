@@ -186,6 +186,7 @@ void gen_key() {
         
         fo.open("key_table.txt", ios::trunc);
         fo.imbue(loc); // Set locale for ofstream
+        fo << setw(5) << "U" << setw(12) << "P" << setw(12) << "F" << setw(5) << "n" << setw(12) << L"M\u00E3\n";
         for (unsigned int i = 0; i < N; i++)
         {
             fo << setw(5) << u[i].c << setw(12) << u[i].p << setw(12) << f[i] << setw(5) << u[i].n << setw(12) << converter(u[i].codeword) << endl;
