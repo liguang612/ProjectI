@@ -179,6 +179,7 @@ void gen_key() {
         for (unsigned int i = 0; i < N; i++)
         { 
             if(u[i].c == L' ') wcout << setw(8) << "<space>" << setw(12) << u[i].p << setw(12) << f[i] << setw(5) << u[i].n << setw(12) << converter(u[i].codeword) << endl;
+            else if(u[i].c == L'\n') wcout << setw(8) << "<enter>" << setw(12) << u[i].p << setw(12) << f[i] << setw(5) << u[i].n << setw(12) << converter(u[i].codeword) << endl;
             else wcout << setw(8) << u[i].c << setw(12) << u[i].p << setw(12) << f[i] << setw(5) << u[i].n << setw(12) << converter(u[i].codeword) << endl;
             key[u[i].codeword] = u[i].c;
         }
