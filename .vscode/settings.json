@@ -70,6 +70,7 @@
         "xlocnum": "cpp",
         "xloctime": "cpp",
         "xtr1common": "cpp",
-        "codecvt": "cpp"
+        "codecvt": "cpp",
+        "fstream": "cpp"
     }
 }
